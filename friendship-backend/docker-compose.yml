@@ -1,0 +1,30 @@
+services:
+  freindship-backend:
+    container_name: freindship-backend
+    image: stang/backend:latest
+    ports:
+      - "3000:3000"
+    environment:
+      PG_USER: ${PG_USER}
+      PG_HOST: freindship-db
+      PG_DATABASE: ${PG_DATABASE}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_PORT: ${PG_PORT}
+    depends_on:
+      - freindship-db
+
+  freindship-db:
+    container_name: freindship-db
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DATABASE}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  db_data:
